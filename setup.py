@@ -6,7 +6,7 @@ setup(
     use_scm_version=True,
     packages=find_packages(),
     install_requires=[
-        'solc',
+        'py-solc',
         'web3',
     ]
 )
