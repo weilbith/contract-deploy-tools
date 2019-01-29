@@ -19,7 +19,7 @@ def main():
     type=click.Path(file_okay=False, exists=True))
 @click.option(
     '--optimize',
-    '-o',
+    '-O',
     default=False,
     help='Turns on the solidity optimizer',
     is_flag=True)
