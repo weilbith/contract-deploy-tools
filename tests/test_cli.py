@@ -20,7 +20,7 @@ def go_to_root_dir():
     os.chdir(current_path)
 
 
-@pytest.mark.usefixtures('go_to_root_dir')
+@pytest.mark.usefixtures("go_to_root_dir")
 def test_default_compile(runner):
-    result = runner.invoke(main, 'compile -d testcontracts')
+    result = runner.invoke(main, "compile -d testcontracts")
     assert result.exit_code == 0
