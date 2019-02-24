@@ -26,10 +26,10 @@ def pytest_addoption(parser):
 def get_contracts_folder(pytestconfig):
     if pytestconfig.getoption(CONTRACTS_FOLDER_OPTION, default=None):
         return pytestconfig.getoption(CONTRACTS_FOLDER_OPTION)
-    return Path(pytestconfig.rootdir) / 'contracts'
+    return Path(pytestconfig.rootdir) / "contracts"
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def contract_assets(pytestconfig):
     """
     Returns the compilation assets (dict containing the content of `contracts.json`) of all compiled contracts
@@ -39,25 +39,27 @@ def contract_assets(pytestconfig):
     return compile_project(contracts_path=contracts_path, optimize=True)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def deploy_contract(web3, contract_assets):
     """Fixture to deploy a contract on the current chain
 
        Usage: `deploy_contract('contract_identifier', constructor_args=(1,2,3))`
     """
 
-    def deploy_contract_function(contract_identifier: str, *, constructor_args=()) -> Contract:
+    def deploy_contract_function(
+        contract_identifier: str, *, constructor_args=()
+    ) -> Contract:
         return deploy_compiled_contract(
-            abi=contract_assets[contract_identifier]['abi'],
-            bytecode=contract_assets[contract_identifier]['bytecode'],
+            abi=contract_assets[contract_identifier]["abi"],
+            bytecode=contract_assets[contract_identifier]["bytecode"],
             web3=web3,
-            constructor_args=constructor_args
+            constructor_args=constructor_args,
         )
 
     return deploy_contract_function
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def chain():
     """
     The running ethereum tester chain
@@ -65,7 +67,7 @@ def chain():
     return eth_tester.EthereumTester(eth_tester.PyEVMBackend())
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def web3(chain):
     """
     Web3 object connected to the ethereum tester chain
@@ -73,19 +75,19 @@ def web3(chain):
     return Web3(EthereumTesterProvider(chain))
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def set_default_account(web3):
     """Sets the web3 default account to the first account of `accounts`"""
     web3.eth.defaultAccount = web3.eth.accounts[0]
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def default_account(web3):
     """Returns the default account which is used to deploy contracts"""
     return web3.eth.defaultAccount
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def accounts(web3):
     """
     Some ethereum accounts on the test chain with some ETH
@@ -93,7 +95,7 @@ def accounts(web3):
     return web3.eth.accounts
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def account_keys(chain):
     """
     The private keys that correspond to the accounts of the `accounts` fixture
@@ -120,17 +122,17 @@ def _find_solc(msgs):
 
 def _get_solc_version(msgs):
     try:
-        process = subprocess.Popen(['solc', '--version'], stdout=subprocess.PIPE)
+        process = subprocess.Popen(["solc", "--version"], stdout=subprocess.PIPE)
     except Exception as err:
         msgs.write("solidity version: <ERROR {}>".format(err))
         return
 
     out, _ = process.communicate()
 
-    lines = out.decode('utf-8').splitlines()
+    lines = out.decode("utf-8").splitlines()
     for line in lines:
         if line.startswith("Version: "):
-            msgs.write("solidity version: {}\n".format(line[len("Version: "):]))
+            msgs.write("solidity version: {}\n".format(line[len("Version: ") :]))
             break
     else:
         msgs.write("solidity version: <UNKNOWN>")

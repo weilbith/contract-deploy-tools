@@ -8,12 +8,12 @@ from eth_utils import add_0x_prefix
 from .files import find_files
 
 DEFAULT_OUTPUT_SELECTION = [
-    'abi',
-    'devdoc',
-    'userdoc',
-    'metadata',
-    'evm.bytecode',
-    'evm.deployedBytecode'
+    "abi",
+    "devdoc",
+    "userdoc",
+    "metadata",
+    "evm.bytecode",
+    "evm.deployedBytecode",
 ]
 
 
@@ -21,9 +21,7 @@ def load_sources(file_paths: List[str]):
     result = {}
     for file_path in file_paths:
         with open(file_path) as source_file:
-            result[file_path] = {
-                'content': source_file.read()
-            }
+            result[file_path] = {"content": source_file.read()}
     return result
 
 
@@ -31,16 +29,20 @@ def normalize_contract_data(contract_data: Dict):
     result = {}
 
     for key, value in contract_data.items():
-        if key == 'evm':
+        if key == "evm":
             evm_data = value
 
-            if 'bytecode' in evm_data:
-                result['bytecode'] = add_0x_prefix(evm_data['bytecode'].get('object', ''))
+            if "bytecode" in evm_data:
+                result["bytecode"] = add_0x_prefix(
+                    evm_data["bytecode"].get("object", "")
+                )
 
-            if 'deployedBytecode' in evm_data:
-                result['deployedBytecode'] = add_0x_prefix(evm_data['deployedBytecode'].get('object', ''))
+            if "deployedBytecode" in evm_data:
+                result["deployedBytecode"] = add_0x_prefix(
+                    evm_data["deployedBytecode"].get("object", "")
+                )
 
-        elif key == 'metadata':
+        elif key == "metadata":
             if value:
                 result[key] = json.loads(value)
 
@@ -62,26 +64,26 @@ def normalize_compiled_contracts(compiled_contracts: Dict, file_paths: List[str]
             if contract_name not in result:
                 result[contract_name] = contract_data
             else:
-                raise BaseException('Can not compile two contracts with the same name')
+                raise BaseException("Can not compile two contracts with the same name")
 
     return result
 
 
 def log_compilation_errors(errors: List[Dict]):
     for error in errors:
-        if 'formattedMessage' in error:
-            print(error['formattedMessage'])
+        if "formattedMessage" in error:
+            print(error["formattedMessage"])
         else:
-            print(error['message'])
+            print(error["message"])
 
 
 def compile_project(
-        contracts_path: str = None,
-        *,
-        file_paths: List[str] = None,
-        allow_paths: List[str] = None,
-        pattern='*.sol',
-        optimize=False
+    contracts_path: str = None,
+    *,
+    file_paths: List[str] = None,
+    allow_paths: List[str] = None,
+    pattern="*.sol",
+    optimize=False
 ):
     """
     Compiles all contracts of the project into a single output
@@ -103,7 +105,7 @@ def compile_project(
         allow_paths = []
 
     if contracts_path is None and not file_paths:
-        contracts_path = 'contracts'
+        contracts_path = "contracts"
 
     if contracts_path is not None:
         file_paths.extend(find_files(contracts_path, pattern=pattern))
@@ -112,50 +114,40 @@ def compile_project(
     sources = load_sources(file_paths)
 
     std_input = {
-        'language': 'Solidity',
-        'sources': sources,
-        'settings': {
-            'outputSelection': {
-                '*': {
-                    '*': DEFAULT_OUTPUT_SELECTION
-                }
-            }
-        }
+        "language": "Solidity",
+        "sources": sources,
+        "settings": {"outputSelection": {"*": {"*": DEFAULT_OUTPUT_SELECTION}}},
     }
 
     if optimize:
-        std_input['settings']['optimizer'] = {
-            'enabled': True,
-            'runs': 500
-        }
+        std_input["settings"]["optimizer"] = {"enabled": True, "runs": 500}
 
     compilation_result = compile_standard(
-        std_input,
-        allow_paths=','.join(os.path.abspath(path) for path in allow_paths),
+        std_input, allow_paths=",".join(os.path.abspath(path) for path in allow_paths)
     )
 
-    if 'errors' in compilation_result:
-        log_compilation_errors(compilation_result['errors'])
+    if "errors" in compilation_result:
+        log_compilation_errors(compilation_result["errors"])
 
-    compiled_contracts = normalize_compiled_contracts(compilation_result['contracts'], file_paths)
+    compiled_contracts = normalize_compiled_contracts(
+        compilation_result["contracts"], file_paths
+    )
     return compiled_contracts
 
 
 def compile_contract(
-        name: str,
-        *,
-        contracts_path='contracts',
-        file_extension='.sol',
-        optimize=False
+    name: str, *, contracts_path="contracts", file_extension=".sol", optimize=False
 ):
     filename = name + file_extension
     file_paths = list(find_files(contracts_path, filename))
 
     if len(file_paths) < 1:
-        raise ValueError('File not found: {}'.format(filename))
+        raise ValueError("File not found: {}".format(filename))
 
     if len(file_paths) > 1:
-        raise ValueError('Multiple files found: {}'.format(file_paths))
+        raise ValueError("Multiple files found: {}".format(file_paths))
 
-    compiled_contracts = compile_project(file_paths=file_paths, allow_paths=[contracts_path], optimize=optimize)
+    compiled_contracts = compile_project(
+        file_paths=file_paths, allow_paths=[contracts_path], optimize=optimize
+    )
     return compiled_contracts[name]

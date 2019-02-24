@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture()
 def contract(deploy_contract):
-    return deploy_contract('TestContract', constructor_args=(4,))
+    return deploy_contract("TestContract", constructor_args=(4,))
 
 
 def test_call(contract):
