@@ -71,6 +71,18 @@ jobs:
           command: |
             flake8 deploy_tools tests
 
+  run-black:
+    executor: ubuntu-builder
+
+    steps:
+      - attach_workspace:
+          at: '~'
+      - config-path
+      - run:
+          name: Run black
+          command: |
+            black --check deploy_tools tests setup.py
+
   run-pytest:
     executor: ubuntu-builder
     steps:
@@ -136,6 +148,12 @@ workflows:
           filters:
             <<: *tagged-filter
 
+      - run-black:
+          requires:
+            - install
+          filters:
+            <<: *tagged-filter
+
       - run-mypy:
           requires:
             - install
@@ -159,6 +177,7 @@ workflows:
           requires:
             - build-sdist
             - run-flake8
+            - run-black
             - run-pytest
             - run-mypy
           filters:
