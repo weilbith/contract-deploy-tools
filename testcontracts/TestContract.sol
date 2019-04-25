@@ -10,7 +10,12 @@ contract TestContract {
         state = val;
     }
 
+    function set(int a) public {
+        state = a;
+    }
+
     function testFunction(int a) public view returns (int) {
         return a + state;
     }
+
 }
