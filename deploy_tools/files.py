@@ -16,8 +16,11 @@ def ensure_path_exists(dir_path):
         os.makedirs(dir_path)
 
 
-def write_compiled_contracts(
-    compiled_contracts: Dict, compiled_contracts_asset_path: str
-):
+def write_pretty_json_asset(json_data: Dict, asset_path: str):
+    with open(asset_path, "w") as file:
+        json.dump(json_data, file, indent=4)
+
+
+def write_minified_json_asset(json_data: Dict, compiled_contracts_asset_path: str):
     with open(compiled_contracts_asset_path, "w") as file:
-        json.dump(compiled_contracts, file, indent=4)
+        json.dump(json_data, file, separators=(",", ":"))

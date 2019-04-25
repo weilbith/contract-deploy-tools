@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List, Dict
+from typing import List, Dict, Any
 
 from solc import compile_standard
 from eth_utils import add_0x_prefix
@@ -15,6 +15,8 @@ DEFAULT_OUTPUT_SELECTION = [
     "evm.bytecode",
     "evm.deployedBytecode",
 ]
+
+ABI_OUTPUT_SELECTION = ["abi", "userdoc"]
 
 
 def load_sources(file_paths: List[str]):
@@ -83,7 +85,8 @@ def compile_project(
     file_paths: List[str] = None,
     allow_paths: List[str] = None,
     pattern="*.sol",
-    optimize=False
+    optimize=False,
+    only_abi=False,
 ):
     """
     Compiles all contracts of the project into a single output
@@ -92,7 +95,8 @@ def compile_project(
         file_paths: A list of to compiled contracts can be provided (optional)
         allow_paths: Additional paths from where it is allowed to load contracts
         pattern: The pattern to find the solidity files
-        optimize: Weather to turn on the solidity optimizer
+        optimize: Whether to turn on the solidity optimizer
+        only_abi: Whether to only create the abi or not
 
     Returns: A dictionary containing the compiled assets of the contracts
 
@@ -113,10 +117,15 @@ def compile_project(
 
     sources = load_sources(file_paths)
 
+    if only_abi:
+        output_selection = ABI_OUTPUT_SELECTION
+    else:
+        output_selection = DEFAULT_OUTPUT_SELECTION
+
     std_input = {
         "language": "Solidity",
         "sources": sources,
-        "settings": {"outputSelection": {"*": {"*": DEFAULT_OUTPUT_SELECTION}}},
+        "settings": {"outputSelection": {"*": {"*": output_selection}}},
     }
 
     if optimize:
@@ -151,3 +160,23 @@ def compile_contract(
         file_paths=file_paths, allow_paths=[contracts_path], optimize=optimize
     )
     return compiled_contracts[name]
+
+
+class UnknownContractException(Exception):
+    pass
+
+
+def filter_contracts(
+    contract_names: List[str], contract_assets_in: Dict[str, Any]
+) -> Dict[str, Any]:
+    if contract_names is None:
+        return contract_assets_in.copy()
+
+    output_dict: Dict[str, Any] = {}
+    try:
+        for contract_name in contract_names:
+            output_dict[contract_name] = contract_assets_in[contract_name]
+    except KeyError as e:
+        raise UnknownContractException(*e.args) from e
+
+    return output_dict
