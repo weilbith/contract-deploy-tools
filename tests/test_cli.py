@@ -60,6 +60,28 @@ def test_default_compile(runner):
 
 
 @pytest.mark.usefixtures("go_to_root_dir")
+def test_minimize_compile(runner):
+    result = runner.invoke(main, "compile -d testcontracts --minimize")
+    assert result.exit_code == 0
+
+
+@pytest.mark.usefixtures("go_to_root_dir")
+def test_contract_names_compile(runner):
+    result = runner.invoke(
+        main, "compile -d testcontracts --contract-names TestContract"
+    )
+    assert result.exit_code == 0
+
+
+@pytest.mark.usefixtures("go_to_root_dir")
+def test_unknown_contract_names_compile(runner):
+    result = runner.invoke(
+        main, "compile -d testcontracts --contract-names TestContracto"
+    )
+    assert result.exit_code == 2
+
+
+@pytest.mark.usefixtures("go_to_root_dir")
 def test_deploy_simple_contract(runner):
     result = runner.invoke(main, "deploy OtherContract -d testcontracts --jsonrpc test")
     assert result.exit_code == 0

@@ -2,6 +2,12 @@ from typing import Sequence
 
 import click
 
+from deploy_tools.compile import filter_contracts, UnknownContractException
+from deploy_tools.files import (
+    write_pretty_json_asset,
+    ensure_path_exists,
+    write_minified_json_asset,
+)
 from web3 import Web3, EthereumTesterProvider, Account
 from web3.utils.abi import get_constructor_abi, get_abi_input_types
 
@@ -10,7 +16,6 @@ from deploy_tools.deploy import (
     build_transaction_options,
     deploy_compiled_contract,
 )
-from deploy_tools.files import write_compiled_contracts, ensure_path_exists
 from .compile import compile_project
 
 
@@ -75,14 +80,45 @@ def main():
     pass
 
 
+@main.command(short_help="Compile all contracts")
 @contracts_dir_option
 @optimize_option
-@main.command(short_help="Compile all contracts")
-def compile(contracts_dir, optimize):
-    compiled_contracts = compile_project(contracts_dir, optimize=optimize)
+@click.option(
+    "--only-abi",
+    default=False,
+    help="Only include the abi of the contracts",
+    is_flag=True,
+)
+@click.option(
+    "--minimize",
+    default=False,
+    help="Minimizes the output file by removing unnecessary whitespaces",
+    is_flag=True,
+)
+@click.option(
+    "--contract-names",
+    default=None,
+    help="Comma separated list of contract names to include in the output, default is to include all contracts",
+)
+def compile(contracts_dir, optimize, only_abi, minimize, contract_names):
+    if contract_names is not None:
+        contract_names = contract_names.split(",")
+
+    try:
+        compiled_contracts = filter_contracts(
+            contract_names,
+            compile_project(contracts_dir, optimize=optimize, only_abi=only_abi),
+        )
+    except UnknownContractException as e:
+        raise click.BadOptionUsage(
+            "contract-names", f"Could not find contract: {e.args[0]}"
+        )
 
     ensure_path_exists("build")
-    write_compiled_contracts(compiled_contracts, "build/contracts.json")
+    if minimize:
+        write_minified_json_asset(compiled_contracts, "build/contracts.json")
+    else:
+        write_pretty_json_asset(compiled_contracts, "build/contracts.json")
 
 
 @main.command(short_help="Deploys a contract")
