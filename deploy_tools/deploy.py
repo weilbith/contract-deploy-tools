@@ -72,9 +72,8 @@ def wait_for_successful_transaction_receipt(web3: Web3, txid: str, timeout=180) 
     :return: Transaction receipt
     """
     receipt = web3.eth.waitForTransactionReceipt(txid, timeout=timeout)
-    tx_info = web3.eth.getTransaction(txid)
     status = receipt.get("status", None)
-    if receipt["gasUsed"] == tx_info["gas"] or status is False:
+    if status is False:
         raise TransactionFailed
     return receipt
 
