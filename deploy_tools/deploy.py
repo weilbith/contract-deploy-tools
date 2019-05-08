@@ -3,6 +3,7 @@ from web3.contract import Contract
 from web3 import Web3
 from web3.eth import Account
 from web3.utils.transactions import fill_nonce
+from web3.utils.threads import Timeout
 
 
 def deploy_compiled_contract(
@@ -67,11 +68,29 @@ class TransactionFailed(Exception):
     pass
 
 
+# When using infura, web3.eth.waitForTransactionReceipt returns a receipt with
+# a block number which is None. This is clearly not what we want. I've copied
+# the following function from web3.utils.transactions and adapted it to also
+# wait for a valid block hash.
+
+
+def wait_for_transaction_receipt(web3, txn_hash, timeout=120, poll_latency=0.1):
+    with Timeout(timeout) as _timeout:
+        while True:
+            txn_receipt = web3.eth.getTransactionReceipt(txn_hash)
+            if txn_receipt is not None and txn_receipt.blockHash is not None:
+                break
+            _timeout.sleep(poll_latency)
+    return txn_receipt
+
+
 def wait_for_successful_transaction_receipt(web3: Web3, txid: str, timeout=180) -> dict:
     """See if transaction went through (Solidity code did not throw).
     :return: Transaction receipt
     """
-    receipt = web3.eth.waitForTransactionReceipt(txid, timeout=timeout)
+    # let's call into our patched implementation of
+    # web3.eth.waitForTransactionReceipt(txid, timeout=timeout)
+    receipt = wait_for_transaction_receipt(web3, txid, timeout=timeout)
     status = receipt.get("status", None)
     if status is False:
         raise TransactionFailed
