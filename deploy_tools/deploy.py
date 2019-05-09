@@ -72,6 +72,10 @@ class TransactionFailed(Exception):
 # a block number which is None. This is clearly not what we want. I've copied
 # the following function from web3.utils.transactions and adapted it to also
 # wait for a valid block hash.
+# web3.py from version 5 will already contain this workaround, see
+# https://github.com/ethereum/web3.py/commit/cad343283a1bac3cb8c8cce29a6b09a2e0282fa5
+# (and the parent commit).
+# We should be able to remove our workaround after we upgraded.
 
 
 def wait_for_transaction_receipt(web3, txn_hash, timeout=120, poll_latency=0.1):
