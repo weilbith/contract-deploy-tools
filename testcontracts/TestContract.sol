@@ -4,17 +4,17 @@ import './subfolder/OtherContract.sol';
 
 contract TestContract {
 
-    int public state;
+    uint public state;
 
-    constructor(int val) public {
+    constructor(uint val) public {
         state = val;
     }
 
-    function set(int a) public {
+    function set(uint a) public {
         state = a;
     }
 
-    function testFunction(int a) public view returns (int) {
+    function testFunction(uint a) public view returns (uint) {
         return a + state;
     }
 
