@@ -1,4 +1,8 @@
 from typing import Dict
+import pkg_resources
+import json
+
+from eth_keyfile import extract_key_from_keyfile
 from web3.contract import Contract
 from web3 import Web3
 from web3.eth import Account
@@ -99,6 +103,38 @@ def wait_for_successful_transaction_receipt(web3: Web3, txid: str, timeout=180) 
     if status is False:
         raise TransactionFailed
     return receipt
+
+
+def load_contracts_json(package_name, filename="contracts.json") -> Dict:
+    resource_package = package_name
+    json_string = pkg_resources.resource_string(resource_package, filename)
+    return json.loads(json_string)
+
+
+def decrypt_private_key(keystore_path: str, password: str) -> bytes:
+    return extract_key_from_keyfile(keystore_path, password.encode("utf-8"))
+
+
+def build_transaction_options(*, gas, gas_price, nonce):
+
+    transaction_options = {}
+
+    if gas is not None:
+        transaction_options["gas"] = gas
+    if gas_price is not None:
+        transaction_options["gasPrice"] = gas_price
+    if nonce is not None:
+        transaction_options["nonce"] = nonce
+
+    return transaction_options
+
+
+def increase_transaction_options_nonce(transaction_options: Dict) -> None:
+    """Increases the nonce inside of `transaction_options` by 1 if present.
+    If there is no nonce in `transaction_options`, this function will not do anything
+    """
+    if "nonce" in transaction_options:
+        transaction_options["nonce"] = transaction_options["nonce"] + 1
 
 
 def _build_and_sign_transaction(

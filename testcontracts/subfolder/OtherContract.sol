@@ -1,3 +1,3 @@
 pragma solidity ^0.4.25;
 
-contract OtherContracts {}
+contract OtherContract {}

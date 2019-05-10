@@ -16,7 +16,7 @@ def test_deploy_from_private_key(web3, contract_assets, account_keys):
         abi=contract_interface["abi"],
         bytecode=contract_interface["bytecode"],
         web3=web3,
-        constructor_args=(-1,),
+        constructor_args=(1,),
         private_key=account_keys[1],
     )
 
@@ -29,7 +29,7 @@ def test_deploy(web3, contract_assets):
         abi=contract_interface["abi"],
         bytecode=contract_interface["bytecode"],
         web3=web3,
-        constructor_args=(-1,),
+        constructor_args=(1,),
     )
 
     assert is_address(contract.address)

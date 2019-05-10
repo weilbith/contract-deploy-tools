@@ -2,6 +2,7 @@ py-solc
 web3
 eth-tester[py-evm]
 eth-utils
+eth-keyfile
 click
 
 # --- development dependencies, i.e. dependencies not needed for running ethindex
