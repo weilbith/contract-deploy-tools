@@ -87,6 +87,7 @@ def compile_project(
     pattern="*.sol",
     optimize=False,
     only_abi=False,
+    evm_version: str = "byzantium",
 ):
     """
     Compiles all contracts of the project into a single output
@@ -97,6 +98,7 @@ def compile_project(
         pattern: The pattern to find the solidity files
         optimize: Whether to turn on the solidity optimizer
         only_abi: Whether to only create the abi or not
+        evm_version: target evm version to use for generated code
 
     Returns: A dictionary containing the compiled assets of the contracts
 
@@ -125,7 +127,10 @@ def compile_project(
     std_input = {
         "language": "Solidity",
         "sources": sources,
-        "settings": {"outputSelection": {"*": {"*": output_selection}}},
+        "settings": {
+            "outputSelection": {"*": {"*": output_selection}},
+            "evmVersion": evm_version,
+        },
     }
 
     if optimize:
