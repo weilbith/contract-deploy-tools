@@ -7,11 +7,10 @@ setup(
     packages=find_packages(),
     install_requires=[
         "py-solc",
-        "web3",
+        "web3[tester]>=5.0.0b2",
         "eth-utils",
         "eth-keyfile",
         "click",
-        "eth-tester[pyevm]",
     ],
     entry_points="""
     [console_scripts]

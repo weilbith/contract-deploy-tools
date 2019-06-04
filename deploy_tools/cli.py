@@ -9,7 +9,7 @@ from deploy_tools.files import (
     write_minified_json_asset,
 )
 from web3 import Web3, EthereumTesterProvider, Account
-from web3.utils.abi import get_constructor_abi, get_abi_input_types
+from web3._utils.abi import get_constructor_abi, get_abi_input_types
 
 from deploy_tools.deploy import (
     decrypt_private_key,

@@ -6,8 +6,8 @@ from eth_keyfile import extract_key_from_keyfile
 from web3.contract import Contract
 from web3 import Web3
 from web3.eth import Account
-from web3.utils.transactions import fill_nonce
-from web3.utils.threads import Timeout
+from web3._utils.transactions import fill_nonce
+from web3._utils.threads import Timeout
 
 
 def deploy_compiled_contract(
