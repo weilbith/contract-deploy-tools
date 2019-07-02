@@ -297,9 +297,7 @@ def test_send_transaction_to_contract_insufficient_gas(
 
 
 @pytest.mark.usefixtures("go_to_root_dir")
-def test_call_contract_function(
-    runner, test_contract_address, test_contract_name
-):
+def test_call_contract_function(runner, test_contract_address, test_contract_name):
     result = runner.invoke(
         main,
         (
@@ -309,4 +307,4 @@ def test_call_contract_function(
     )
 
     assert result.exit_code == 0
-    assert result.output.strip() == '4'
+    assert result.output.strip() == "4"
