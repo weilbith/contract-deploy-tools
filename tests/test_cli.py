@@ -294,3 +294,19 @@ def test_send_transaction_to_contract_insufficient_gas(
 
     assert result.exit_code == 1
     assert type(result.exception) == ValidationError
+
+
+@pytest.mark.usefixtures("go_to_root_dir")
+def test_call_contract_function(
+    runner, test_contract_address, test_contract_name
+):
+    result = runner.invoke(
+        main,
+        (
+            f"call -d testcontracts --jsonrpc test --contract-address {test_contract_address} "
+            f"-- {test_contract_name} state"
+        ),
+    )
+
+    assert result.exit_code == 0
+    assert result.output.strip() == '4'

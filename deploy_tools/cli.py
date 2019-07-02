@@ -282,6 +282,37 @@ def transact(
     click.echo(encode_hex(receipt.transactionHash))
 
 
+@main.command(short_help="Calls a contract function")
+@click.argument("contract-name", type=str)
+@click.argument("function-name", type=str)
+@click.argument("args", nargs=-1, type=str)
+@jsonrpc_option
+@contracts_dir_option
+@contract_address_option
+def call(
+    contract_name: str,
+    function_name: str,
+    args: Sequence[str],
+    jsonrpc: str,
+    contracts_dir,
+    contract_address,
+):
+    web3 = connect_to_json_rpc(jsonrpc)
+
+    compiled_contracts = compile_project(contracts_dir)
+
+    if contract_name not in compiled_contracts:
+        raise click.BadArgumentUsage(f"Contract {contract_name} was not found.")
+
+    contract_abi = compiled_contracts[contract_name]["abi"]
+    contract = web3.eth.contract(abi=contract_abi, address=contract_address)
+    function_abi = get_contract_matching_function(contract_abi, function_name, args)
+    parsed_arguments = parse_args_to_matching_types_for_function(args, function_abi)
+    result = contract.functions[function_name](*parsed_arguments).call()
+
+    click.echo(result)
+
+
 def connect_to_json_rpc(jsonrpc) -> Web3:
     if jsonrpc == "test":
         web3 = test_json_rpc
