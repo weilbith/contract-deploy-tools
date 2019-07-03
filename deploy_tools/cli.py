@@ -400,10 +400,8 @@ def parse_arg_to_matching_type(arg, type: str):
         if arg.lower() == "false":
             return False
         raise ValueError(f"Expected true or false, but got {arg}")
-    if (
-        type.find("address") != -1
-        or type.find("bytes") != -1
-        or type.find("string") != -1
-    ):
+    if type.find("address") != -1:
+        return Web3.toChecksumAddress(arg)
+    if type.find("bytes") != -1 or type.find("string") != -1:
         return arg
     raise ValueError(f"Cannot handle parameter of type {type} yet.")
