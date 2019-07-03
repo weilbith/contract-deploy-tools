@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+`0.4.3`_ (2019-07-03)
+-------------------------------
+* Add call command to execute a function call to a smart contract
+
 `0.4.2`_ (2019-06-26)
 -------------------------------
 * Add transact command to send a function call transaction to a smart contract
