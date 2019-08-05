@@ -1,6 +1,7 @@
 """Pytest plugins"""
 from pathlib import Path
 
+import os
 import io
 import shutil
 import subprocess
@@ -40,6 +41,18 @@ def get_evm_version(pytestconfig):
     if pytestconfig.getoption(EVM_VERSION_OPTION, default=None):
         return pytestconfig.getoption(EVM_VERSION_OPTION)
     return "byzantium"
+
+
+def remove_click_options_environment_variables():
+    """Remove the environment variables used by click options in the CLI.
+    Otherwise they will interfere with the tests.
+    """
+    for env_var in list(os.environ.keys()):
+        if env_var.startswith("DEPLOY_TOOLS_"):
+            del os.environ[env_var]
+
+
+remove_click_options_environment_variables()
 
 
 @pytest.fixture(scope="session")
