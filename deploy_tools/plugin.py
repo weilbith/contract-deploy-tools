@@ -43,6 +43,7 @@ def get_evm_version(pytestconfig):
     return "byzantium"
 
 
+@pytest.fixture(scope="session", autouse=True)
 def remove_click_options_environment_variables():
     """Remove the environment variables used by click options in the CLI.
     Otherwise they will interfere with the tests.
@@ -50,9 +51,6 @@ def remove_click_options_environment_variables():
     for env_var in list(os.environ.keys()):
         if env_var.startswith("DEPLOY_TOOLS_"):
             del os.environ[env_var]
-
-
-remove_click_options_environment_variables()
 
 
 @pytest.fixture(scope="session")
