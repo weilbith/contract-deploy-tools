@@ -92,7 +92,7 @@ def decrypt_private_key(keystore_path: str, password: str) -> bytes:
     return extract_key_from_keyfile(keystore_path, password.encode("utf-8"))
 
 
-def build_transaction_options(*, gas, gas_price, nonce):
+def build_transaction_options(*, gas, gas_price, nonce, value=None):
 
     transaction_options = {}
 
@@ -102,6 +102,8 @@ def build_transaction_options(*, gas, gas_price, nonce):
         transaction_options["gasPrice"] = gas_price
     if nonce is not None:
         transaction_options["nonce"] = nonce
+    if value is not None:
+        transaction_options["value"] = value
 
     return transaction_options
 

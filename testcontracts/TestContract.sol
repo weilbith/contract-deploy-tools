@@ -14,6 +14,12 @@ contract TestContract {
         state = a;
     }
 
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function pay() payable public {}
+
     function testFunction(uint a) public view returns (uint) {
         return a + state;
     }

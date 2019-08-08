@@ -123,6 +123,12 @@ private_key_option = click.option(
     type=str,
     default=None,
 )
+value_option = click.option(
+    "--value",
+    help="Value parameter for a transaction as the amount of Wei to send with",
+    type=int,
+    default=None,
+)
 
 
 @click.group()
@@ -272,6 +278,7 @@ def deploy(
 @contracts_dir_option
 @compiled_contracts_path_option
 @contract_address_option
+@value_option
 def transact(
     contract_name: str,
     function_name: str,
@@ -285,6 +292,7 @@ def transact(
     contracts_dir,
     compiled_contracts_path,
     contract_address,
+    value: int,
 ):
     web3 = connect_to_json_rpc(jsonrpc)
     private_key = retrieve_private_key(keystore)
@@ -293,7 +301,7 @@ def transact(
         web3=web3, nonce=nonce, auto_nonce=auto_nonce, private_key=private_key
     )
     transaction_options = build_transaction_options(
-        gas=gas, gas_price=gas_price, nonce=nonce
+        gas=gas, gas_price=gas_price, nonce=nonce, value=value
     )
 
     compiled_contracts = get_compiled_contracts(

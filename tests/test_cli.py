@@ -294,6 +294,43 @@ def test_send_transaction_to_contract_from_compiled_contracts(
 
 
 @pytest.mark.usefixtures("go_to_root_dir")
+def test_send_transaction_with_value_parameter(
+    runner, test_contract_address, test_contract_name
+):
+    """Change balance of a contract.
+
+    Test the transaction value parameter by a payable function on the
+    test contract. Because of the setup with an internal test RPC
+    endpoint, it is not possible to directly check the contracts
+    balance. Therefore an additional contract function is provided which
+    can be called to retrieve the contracts balance.
+    """
+
+    transaction_value = 1
+    shared_command_string = (
+        f"-d testcontracts --jsonrpc test --contract-address"
+        f" {test_contract_address} -- {test_contract_name}"
+    )
+
+    result_initial_balance_call = runner.invoke(
+        main, f"call {shared_command_string} getBalance"
+    )
+    assert result_initial_balance_call.exit_code == 0
+    assert result_initial_balance_call.output.strip() == "0"
+
+    result_pay_transaction = runner.invoke(
+        main, f"transact --value {transaction_value} {shared_command_string} pay"
+    )
+    assert result_pay_transaction.exit_code == 0
+
+    result_final_balance_call = runner.invoke(
+        main, f"call {shared_command_string} getBalance"
+    )
+    assert result_final_balance_call.exit_code == 0
+    assert result_final_balance_call.output.strip() == f"{transaction_value}"
+
+
+@pytest.mark.usefixtures("go_to_root_dir")
 def test_send_transaction_to_contract_find_duplicated_function_by_argument_length(
     runner, test_contract_address, test_contract_name
 ):
