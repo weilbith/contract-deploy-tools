@@ -297,14 +297,11 @@ def test_send_transaction_to_contract_from_compiled_contracts(
 def test_send_transaction_with_value_parameter(
     runner, test_contract_address, test_contract_name
 ):
-    """Change balance of a contract.
-
-    Test the transaction value parameter by a payable function on the
-    test contract. Because of the setup with an internal test RPC
-    endpoint, it is not possible to directly check the contracts
-    balance. Therefore an additional contract function is provided which
-    can be called to retrieve the contracts balance.
-    """
+    # Change balance of a contract. Test the transaction value parameter by
+    # a payable function on the test contract. Because of the setup with an
+    # internal test RPC endpoint, it is not possible to directly check the
+    # contracts balance. Therefore an additional contract function is provided
+    # which can be called to retrieve the contracts balance.
 
     transaction_value = 1
     shared_command_string = (

@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Optional
 from pathlib import Path
 from os import path
 
@@ -292,7 +292,7 @@ def transact(
     contracts_dir,
     compiled_contracts_path,
     contract_address,
-    value: int,
+    value: Optional[int],
 ):
     web3 = connect_to_json_rpc(jsonrpc)
     private_key = retrieve_private_key(keystore)
