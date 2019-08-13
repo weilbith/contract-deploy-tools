@@ -1,6 +1,12 @@
 ==========
 Change Log
 ==========
+`0.4.4`_ (2019-08-13)
+-------------------------------
+* Allow options to be configured via environment variables
+  (e.g. ``KEYSTORE``, ``JSONRPC``)
+* Add the ``generate-keystore`` command
+* Add the ``--compiled-contracts`` option to the ``deploy`` command
 
 `0.4.3`_ (2019-07-03)
 -------------------------------
@@ -59,3 +65,4 @@ Change Log
 .. _0.4.1: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.0...0.4.1
 .. _0.4.2: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.1...0.4.2
 .. _0.4.3: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.2...0.4.3
+.. _0.4.4: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.3...0.4.4
