@@ -119,7 +119,7 @@ def increase_transaction_options_nonce(transaction_options: Dict) -> None:
 def _build_and_sign_transaction(
     function_call, *, web3, transaction_options, private_key
 ):
-    account = Account.privateKeyToAccount(private_key)
+    account = Account.from_key(private_key)
 
     if "from" in transaction_options and transaction_options["from"] != account.address:
         raise ValueError(
