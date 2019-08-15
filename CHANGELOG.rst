@@ -1,10 +1,16 @@
 ==========
 Change Log
 ==========
+
+`unreleased`_
+-------------------------------
+
+
 `0.5.0`_ (2019-08-15)
 -------------------------------
 * Change ``--optimize`` to a toggle option with default ``True``
 * Enable optimization per default for contract compile functions
+* Allow password to be empty for decrypting a keystore
 
 `0.4.4`_ (2019-08-13)
 -------------------------------
@@ -71,3 +77,5 @@ Change Log
 .. _0.4.2: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.1...0.4.2
 .. _0.4.3: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.2...0.4.3
 .. _0.4.4: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.3...0.4.4
+.. _0.5.0: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.4.4...0.5.0
+.. _unreleased: https://github.com/trustlines-protocol/contract-deploy-tools/compare/0.5.0...master
