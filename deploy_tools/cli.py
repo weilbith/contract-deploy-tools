@@ -450,6 +450,7 @@ def retrieve_private_key(keystore_path):
             "Please enter the password to decrypt the keystore",
             type=str,
             hide_input=True,
+            default="",  # allow empty password
         )
         private_key = decrypt_private_key(keystore_path, password)
 
