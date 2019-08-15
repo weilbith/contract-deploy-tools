@@ -87,7 +87,7 @@ def compile_project(
     pattern="*.sol",
     optimize=True,
     only_abi=False,
-    evm_version: str = "byzantium",
+    evm_version: str = "petersburg",
 ):
     """
     Compiles all contracts of the project into a single output
