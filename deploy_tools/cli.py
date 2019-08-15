@@ -93,7 +93,7 @@ contracts_dir_option = click.option(
 optimize_option = click.option(
     "--optimize",
     "-O",
-    default=False,
+    default=True,
     help="Turns on the solidity optimizer",
     is_flag=True,
     envvar="OPTIMIZE",
