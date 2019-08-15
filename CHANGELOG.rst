@@ -1,6 +1,11 @@
 ==========
 Change Log
 ==========
+`0.4.5`_ (2019-08-15)
+-------------------------------
+* Change ``--otimizate`` option's default to ``True``
+* Enable optimization per default for contract compile functions
+
 `0.4.4`_ (2019-08-13)
 -------------------------------
 * Allow options to be configured via environment variables
