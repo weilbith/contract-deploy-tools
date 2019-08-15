@@ -85,9 +85,9 @@ def compile_project(
     file_paths: List[str] = None,
     allow_paths: List[str] = None,
     pattern="*.sol",
-    optimize=False,
+    optimize=True,
     only_abi=False,
-    evm_version: str = "byzantium",
+    evm_version: str = "petersburg",
 ):
     """
     Compiles all contracts of the project into a single output
@@ -150,7 +150,7 @@ def compile_project(
 
 
 def compile_contract(
-    name: str, *, contracts_path="contracts", file_extension=".sol", optimize=False
+    name: str, *, contracts_path="contracts", file_extension=".sol", optimize=True
 ):
     filename = name + file_extension
     file_paths = list(find_files(contracts_path, filename))

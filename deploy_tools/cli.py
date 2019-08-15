@@ -91,11 +91,10 @@ contracts_dir_option = click.option(
     envvar="CONTRACTS_DIR",
 )
 optimize_option = click.option(
-    "--optimize",
-    "-O",
-    default=False,
-    help="Turns on the solidity optimizer",
-    is_flag=True,
+    "--optimize/--no-optimize",
+    default=True,
+    show_default=True,
+    help="Toggles the solidity optimizer",
     envvar="OPTIMIZE",
 )
 evm_version_option = click.option(
