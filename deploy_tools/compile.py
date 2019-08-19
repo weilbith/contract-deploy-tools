@@ -98,7 +98,7 @@ def compile_project(
         allow_paths: Additional paths from where it is allowed to load contracts
         pattern: The pattern to find the solidity files
         optimize: Whether to turn on the solidity optimizer
-        optimize_runs: Number of runs by the solidity optimizer
+        optimize_runs: Number of contract runs to optimize for
         only_abi: Whether to only create the abi or not
         evm_version: target evm version to use for generated code
 

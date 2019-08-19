@@ -102,7 +102,7 @@ optimize_runs_option = click.option(
     default=500,
     type=int,
     show_default=True,
-    help="Number of optimization runs when compile contracts",
+    help="Number of contract runs to optimize for when compiling contracts",
     envvar="OPTIMIZE_RUNS",
 )
 evm_version_option = click.option(
